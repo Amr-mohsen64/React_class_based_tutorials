@@ -1,4 +1,5 @@
 import { Fragment, useState, useEffect, Component } from 'react';
+import UsersContext from '../store/user-context';
 import classes from "./userFinder.module.css";
 import Users from './Users';
 
@@ -10,6 +11,9 @@ const DUMMY_USERS = [
 ];
 
 class userFinder extends Component {
+
+    static contextType = UsersContext;
+
     constructor() {
         super()
 
@@ -21,7 +25,7 @@ class userFinder extends Component {
 
     componentDidMount() {
         //sent http request....
-        this.setState({ filteredUsers: DUMMY_USERS })
+        this.setState({ filteredUsers: this.context.users })
     }
 
     //called when copment reavluated
@@ -30,7 +34,7 @@ class userFinder extends Component {
         //to prevent infinte loop because setstae rexcute the component
         if (prevState.searchTerm !== this.state.searchTerm) {
             this.setState({
-                filteredUsers: DUMMY_USERS.filter(user => user.name.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
+                filteredUsers: this.context.users.filter(user => user.name.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
             })
         }
 
@@ -39,8 +43,6 @@ class userFinder extends Component {
     searchChangeHandler(event) {
         this.setState({ searchTerm: event.target.value })
     }
-
-
 
     render() {
         return (
