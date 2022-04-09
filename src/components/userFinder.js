@@ -1,5 +1,6 @@
 import { Fragment, useState, useEffect, Component } from 'react';
 import UsersContext from '../store/user-context';
+import ErrorBoundray from './ErrorBoundray';
 import classes from "./userFinder.module.css";
 import Users from './Users';
 
@@ -38,6 +39,11 @@ class userFinder extends Component {
             })
         }
 
+
+        if(this.context.users.length === 0){
+            throw new Error("no users provided")
+        }
+
     }
 
     searchChangeHandler(event) {
@@ -50,7 +56,10 @@ class userFinder extends Component {
                 <div className={classes.finder}>
                     <input type='search' onChange={this.searchChangeHandler.bind(this)} />
                 </div>
-                <Users users={this.state.filteredUsers} />
+                <ErrorBoundray>
+                    <Users users={this.state.filteredUsers} />
+                </ErrorBoundray>
+
             </Fragment>
         );
     }
